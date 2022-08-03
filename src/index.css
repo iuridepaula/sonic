@@ -1,13 +1,38 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: "Sonic HUD Font";
+  src: url("./assets/fonts/Sonic-HUD-Font.woff2") format("woff2"),
+    url("./assets/fonts/Sonic-HUD-Font.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: black;
+  background-size: cover;
+  min-height: 100vh;
+  line-height: 1;
+}
+
+html,
+body {
+  font-family: "Sonic HUD Font", sans-serif;
+}
+
+.app h1 {
+  position: fixed;
+  top: 3rem;
+  left: 3rem;
+  color: white;
+  font-size: 6rem;
+  text-transform: uppercase;
+  background: -webkit-linear-gradient(yellow, orange);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.3;
 }

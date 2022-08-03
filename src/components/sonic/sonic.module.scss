@@ -1,0 +1,214 @@
+$x: 156px;
+$y: 160px;
+
+.sonicBox {
+  position: fixed;
+  bottom: 5.6rem;
+  left: 0;
+  transform-origin: 0 bottom;
+  display: inline-block;
+  width: $x;
+  height: $y;
+
+  &.dropDash {
+    .sonic {
+      background-image: url("./assets/drop-dash.png");
+      background-size: auto 100%;
+      animation: drop-dash 0.5s steps(16) infinite;
+
+      @keyframes drop-dash {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: -#{$x * 16} 0;
+        }
+      }
+    }
+  }
+}
+
+.sonic {
+  width: $x;
+  height: $y;
+  background: url("./assets/idle.png") no-repeat 0 0;
+  background-size: auto 100%;
+
+  &.left {
+    transform: rotateY(180deg);
+  }
+
+  &.idle {
+    animation: idle 1s steps(3) infinite alternate;
+    transform-origin: center bottom;
+    background-position: center bottom;
+
+    @keyframes idle {
+      from {
+        background-size: 100% 100%;
+      }
+      to {
+        background-size: 100% 98%;
+      }
+    }
+  }
+  &.bored {
+    background-image: url("./assets/bored.png");
+    background-size: auto 200%;
+    animation-name: bored-1, bored-1-2, bored-2, bored-2-2;
+    animation-duration: 1s, 1s, 2s, 1s;
+    animation-timing-function: steps(4), steps(5), steps(6), steps(4);
+    animation-iteration-count: infinite;
+    animation-delay: 0s, 1s, 9s, 11s;
+
+    @keyframes bored-1 {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: -#{$x * 4} 0;
+      }
+    }
+    @keyframes bored-1-2 {
+      from {
+        background-position: -#{$x * 5} 0;
+      }
+      to {
+        background-position: -#{$x * 10} 0;
+      }
+    }
+    @keyframes bored-2 {
+      from {
+        background-position: -#{$x * 0} -#{$y};
+      }
+      to {
+        background-position: -#{$x * 6} -#{$y};
+      }
+    }
+    @keyframes bored-2-2 {
+      from {
+        background-position: -#{$x * 7} -#{$y};
+      }
+      to {
+        background-position: -#{$x * 11} -#{$y};
+      }
+    }
+  }
+  &.walk {
+    background-image: url("./assets/walk.png");
+    background-size: auto 500%;
+    animation-name: walk-start, walk-loop, jog, run, max;
+    animation-duration: 0.9s, 0.6s, 0.5s, 0.4s, 0.2s;
+    animation-timing-function: steps(15), steps(16), steps(10), steps(8),
+      steps(8);
+    animation-iteration-count: infinite;
+    animation-delay: 0s, 0.9s, 1.8s, 2.8s, 3.6s;
+
+    @keyframes walk-start {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: -#{$x * 15} 0;
+      }
+    }
+    @keyframes walk-loop {
+      from {
+        background-position: 0 -#{$y};
+      }
+      to {
+        background-position: -#{$x * 16} -#{$y};
+      }
+    }
+    @keyframes jog {
+      from {
+        background-position: 0 -#{$y * 2};
+      }
+      to {
+        background-position: -#{$x * 10} -#{$y * 2};
+      }
+    }
+    @keyframes run {
+      from {
+        background-position: 0 -#{$y * 3};
+      }
+      to {
+        background-position: -#{$x * 8} -#{$y * 3};
+      }
+    }
+    @keyframes max {
+      from {
+        background-position: 0 -#{$y * 4};
+      }
+      to {
+        background-position: -#{$x * 8} -#{$y * 4};
+      }
+    }
+  }
+  &.skid {
+    background-image: url("./assets/skid.png");
+    background-size: auto 100%;
+    animation: skid 0.3s steps(7) 1 forwards;
+
+    @keyframes skid {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: -#{$x * 7} 0;
+      }
+    }
+  }
+  &.loopUp {
+    background-image: url("./assets/up-down.png");
+    background-size: auto 200%;
+    animation: look-up 0.4s steps(4) 1 forwards;
+
+    @keyframes look-up {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: -#{$x * 4} 0;
+      }
+    }
+  }
+  &.crouch {
+    background-image: url("./assets/up-down.png");
+    background-size: auto 200%;
+    animation: crouch 0.2s steps(3) 1 forwards;
+
+    @keyframes crouch {
+      from {
+        background-position: 0 -#{$y};
+      }
+      to {
+        background-position: -#{$x * 3} -#{$y};
+      }
+    }
+  }
+  &.spinDash {
+    background-image: url("./assets/spin-dash.png");
+    background-size: auto 100%;
+    animation: spin-dash 0.4s steps(9) infinite;
+
+    &.spin-fast {
+      animation-duration: 0.3s;
+    }
+    &.spin-faster {
+      animation-duration: 0.2s;
+    }
+    &.spin-max {
+      animation-duration: 0.1s;
+    }
+
+    @keyframes spin-dash {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: -#{$x * 9} 0;
+      }
+    }
+  }
+}
