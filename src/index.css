@@ -1,38 +1,9 @@
-@font-face {
-  font-family: "Sonic HUD Font";
-  src: url("./assets/fonts/Sonic-HUD-Font.woff2") format("woff2"),
-    url("./assets/fonts/Sonic-HUD-Font.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 * {
   box-sizing: border-box;
 }
 
 html {
-  background: black;
-  background-size: cover;
+  background: url("./assets/bg.png") left bottom;
+  background-size: auto 1200px;
   min-height: 100vh;
-  line-height: 1;
-}
-
-html,
-body {
-  font-family: "Sonic HUD Font", sans-serif;
-}
-
-.app h1 {
-  position: fixed;
-  top: 3rem;
-  left: 3rem;
-  color: white;
-  font-size: 6rem;
-  text-transform: uppercase;
-  background: -webkit-linear-gradient(yellow, orange);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1.3;
 }

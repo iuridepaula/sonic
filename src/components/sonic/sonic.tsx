@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import style from "./sonic.module.scss";
 
-const AudioJump = require("./assets/jump.mp3");
-const AudioSkid = require("./assets/skid.mp3");
-const AudioSpin = require("./assets/spin.mp3");
-
 const SONIC = {
   width: 156,
   height: 160,
@@ -24,24 +20,24 @@ export default function Sonic() {
   const [isJumping, setIsJumping] = useState(false);
   const [jump, setJump] = useState(0);
 
-  const audioJump = new Audio(AudioJump);
+  // audio
+  const audioJump = new Audio(require("./assets/jump.mp3"));
+  const audioSpin = new Audio(require("./assets/spin.mp3"));
+  audioSpin.volume = 0.5;
+  const audioSkid = new Audio(require("./assets/skid.mp3"));
+  audioSkid.volume = 0.5;
+
   function playJumpAudio() {
     if (jump) return;
     audioJump.currentTime = 0;
     audioJump.play();
   }
-
-  const audioSpin = new Audio(AudioSpin);
   function playSpinAudio() {
-    audioSpin.volume = 0.5;
     audioSpin.currentTime = 0;
     audioSpin.play();
   }
-
-  const audioSkid = new Audio(AudioSkid);
   function playSkidAudio() {
     if (isSkiding) return;
-    audioSkid.volume = 0.5;
     audioSkid.currentTime = 0;
     audioSkid.play();
   }
@@ -61,42 +57,24 @@ export default function Sonic() {
     }
   }
 
-  // GRAVITY
-  useEffect(() => {
-    let moveLoop: number | undefined;
-    let gravityForce = 16;
-
-    function animation() {
-      if (jump) {
-        gravityForce = gravityForce * 1.75;
-        const newJump = Math.max(0, jump - gravityForce);
-        setJump((jump) => Math.max(0, jump - gravityForce));
-
-        if (!newJump) {
-          setIsJumping(false);
-        }
-      }
-      moveLoop = requestAnimationFrame(animation);
-    }
-    moveLoop = requestAnimationFrame(animation);
-
-    return () => {
-      if (moveLoop) cancelAnimationFrame(moveLoop);
-    };
-  }, [jump]);
-
   // JUMP
   useEffect(() => {
     let moveLoop: number | undefined;
-    let jumpForce = 92;
+    let jumpLimit = SONIC.height * 3;
+    let i = 0;
 
     function animation() {
       if (isJumping) {
-        // jump
-        jumpForce = jumpForce * 0.92;
-        setJump((jump) =>
-          Math.min(SONIC.height * 3, jump + Math.max(1, jumpForce))
-        );
+        i = i + 0.1;
+
+        if (i > Math.PI) {
+          setJump(0);
+          setIsJumping(false);
+          return;
+        }
+
+        const value = Math.max(0, jumpLimit * Math.sin(i));
+        setJump(value);
       }
 
       moveLoop = requestAnimationFrame(animation);
@@ -199,18 +177,18 @@ export default function Sonic() {
     if (isPressingButtons && controller.ArrowLeft) {
       setDirection(0);
       playJumpAudio();
-      setIsJumping(true);
+      if (!isJumping) setIsJumping(true);
       return;
     }
     if (isPressingButtons && controller.ArrowRight) {
       setDirection(1);
       playJumpAudio();
-      setIsJumping(true);
+      if (!isJumping) setIsJumping(true);
       return;
     }
     if (isPressingButtons && controller.ArrowUp) {
       playJumpAudio();
-      setIsJumping(true);
+      if (!isJumping) setIsJumping(true);
       return;
     }
     if (isPressingButtons && controller.ArrowDown) {
@@ -238,7 +216,7 @@ export default function Sonic() {
     }
     if (isPressingButtons) {
       playJumpAudio();
-      setIsJumping(true);
+      if (!isJumping) setIsJumping(true);
       return;
     }
 
@@ -249,7 +227,7 @@ export default function Sonic() {
     }, 20 * 1000);
 
     return () => clearTimeout(boredTimer);
-  }, [controller]);
+  }, [controller, isJumping]);
 
   // LISTENERS
   useEffect(() => {
@@ -291,9 +269,3 @@ export default function Sonic() {
     </div>
   );
 }
-
-// idle
-// bored
-// walking
-// running
-//
