@@ -3,6 +3,8 @@
 }
 
 html {
-  background: black;
+  font-family: sans-serif;
+  line-height: 1;
+  background: #101010;
   min-height: 100vh;
 }

@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
 
-type Track = "jump" | "launch" | "spin" | "skid";
+type Track = "jump" | "launch" | "spin" | "skid" | "roll";
 
 const audio: Record<Track, HTMLAudioElement> = {
   jump: new Audio(require("../components/sonic/assets/jump.mp3")),
   launch: new Audio(require("../components/sonic/assets/spin-launch.mp3")),
   spin: new Audio(require("../components/sonic/assets/spin.mp3")),
+  roll: new Audio(require("../components/sonic/assets/roll.mp3")),
   skid: new Audio(require("../components/sonic/assets/skid.mp3")),
 };
 
@@ -15,14 +16,16 @@ export function useSonicAudio() {
     jump: useRef(true),
     launch: useRef(true),
     spin: useRef(true),
+    roll: useRef(true),
     skid: useRef(true),
   };
 
   // volume
   audio.skid.volume = 0.75;
+  audio.roll.volume = 0.5;
   audio.spin.volume = 0.5;
   // can't play mutiple times
-  (["launch", "jump"] as Track[]).forEach((track) => {
+  (["launch", "jump", "roll"] as Track[]).forEach((track) => {
     audio[track].onplay = () => (canPlay[track].current = false);
     audio[track].onended = () => (canPlay[track].current = true);
   });
@@ -45,6 +48,7 @@ export function useSonicAudio() {
       await audio[track].play();
     } catch (error) {
       // silence is golden
+      canPlay[track].current = true;
     }
   }
 
@@ -54,6 +58,7 @@ export function useSonicAudio() {
     try {
       await audio[track].pause();
       audio[track].currentTime = 0;
+      canPlay[track].current = true;
     } catch (error) {
       // silence is golden
     }

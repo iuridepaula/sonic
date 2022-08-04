@@ -1,14 +1,18 @@
 $x: 156px;
 $y: 160px;
 
+@mixin sonic-size {
+  width: $x;
+  height: $y;
+}
+
 .sonicBox {
+  @include sonic-size;
   position: fixed;
-  bottom: 5.6rem;
+  bottom: 0;
   left: 0;
   transform-origin: 0 bottom;
   display: inline-block;
-  width: $x;
-  height: $y;
 
   &.dropDash {
     .sonic {
@@ -29,8 +33,7 @@ $y: 160px;
 }
 
 .sonic {
-  width: $x;
-  height: $y;
+  @include sonic-size;
   background: url("./assets/idle.png") no-repeat 0 0;
   background-size: auto 100%;
 
@@ -211,4 +214,9 @@ $y: 160px;
       }
     }
   }
+}
+
+:export {
+  x: $x;
+  y: $y;
 }

@@ -5,8 +5,8 @@ import { useSonicAudio } from "../../hooks/useSonicSound";
 import style from "./sonic.module.scss";
 
 const SONIC = {
-  width: 156,
-  height: 160,
+  width: +style.x.replace(/[^\d]/g, ""),
+  height: +style.y.replace(/[^\d]/g, ""),
 };
 
 type Actions = "idle" | "bored" | "walk" | "loopUp" | "crouch" | "spinDash";
@@ -21,6 +21,7 @@ export default function Sonic() {
   const [isSpinning, launchSpin] = useState(false);
   const [controller, setController] = useState<Record<string, boolean>>({});
   const [isJumping, setIsJumping] = useState(false);
+  const [isRolling, setIsRolling] = useState(false);
   const [jump, setJump] = useState(0);
   const audio = useSonicAudio();
 
@@ -30,14 +31,27 @@ export default function Sonic() {
   const hasHitStartLimit = useMemo(() => {
     return !direction && distance <= 0;
   }, [direction, distance]);
-  const spinSpeedClass = useMemo(
-    () =>
-      `spin-${
-        spin > 24 ? "max" : spin > 32 ? "faster" : spin > 24 ? "fast" : ""
-      }`,
-    [spin]
-  );
+  const spinSpeedClass = useMemo<string>(() => {
+    if (spin > 7) return style["spin-max"];
+    if (spin > 5) return style["spin-faster"];
+    if (spin > 3) return style["spin-fast"];
+    return "";
+  }, [spin]);
+  const directionClass = useMemo(() => {
+    return !direction ? style.left : "";
+  }, [direction]);
+  const dropDashClass = useMemo(() => {
+    return isJumping || isRolling ? style.dropDash : "";
+  }, [isJumping, isRolling]);
+  const actionClass = useMemo(() => {
+    return isSkiding
+      ? style.skid
+      : spin || isSpinning
+      ? style.spinDash
+      : style[action];
+  }, [action, isSkiding, isSpinning, spin]);
 
+  // KEY EVENTS HANDLER
   function onKey(e: KeyboardEvent) {
     const isPressed = e.type === "keydown";
 
@@ -88,6 +102,25 @@ export default function Sonic() {
             ? prev + Math.max(2, speed / 2)
             : prev - Math.max(2, speed / 2);
         });
+      } else if (action === "crouch" && speed) {
+        // brake
+        audio.play("roll");
+        setIsRolling(!!speed);
+        setSpeed((cur) => (cur > 0 ? Math.max(0, cur - 1) : 0));
+        // roll...
+        setDistance((prev) => {
+          if (!isRolling) {
+            return prev;
+          }
+          if (hasHitEndLimit) {
+            return window.innerWidth - SONIC.width;
+          }
+          if (hasHitStartLimit) {
+            return 0;
+          }
+
+          return direction ? prev + 8 : prev - 8;
+        });
       } else if (action === "idle" && speed) {
         // brake
         if (speed > 24 && !jump) audio.play("skid");
@@ -108,13 +141,21 @@ export default function Sonic() {
           return direction ? prev + 6 : prev - 6;
         });
       } else {
+        setIsRolling(false);
         setSkid(false);
         setSpeed(0);
-        audio.stop("skid");
       }
     },
     [],
-    [direction, action, speed, isSkiding, hasHitEndLimit, hasHitStartLimit]
+    [
+      direction,
+      action,
+      speed,
+      isSkiding,
+      isRolling,
+      hasHitEndLimit,
+      hasHitStartLimit,
+    ]
   );
 
   // SPIN RESISTANCE & LAUNCH ANIMATION
@@ -233,7 +274,7 @@ export default function Sonic() {
 
     let boredTimer = doNothing();
     return () => clearTimeout(boredTimer);
-  }, [controller, isJumping]);
+  }, [controller, isJumping, speed]);
 
   // KEYBOARD LISTENERS
   useEffect(() => {
@@ -249,19 +290,11 @@ export default function Sonic() {
   return (
     <div>
       <div
-        className={`${style.sonicBox} ${isJumping ? style.dropDash : null} ${
-          direction ? style.right : style.left
-        }`}
+        className={`${style.sonicBox} ${dropDashClass} ${directionClass}`}
         style={{ transform: `translate3D(${distance}px,-${jump}px,0)` }}
       >
         <div
-          className={`${style.sonic} ${
-            isSkiding
-              ? style.skid
-              : spin || isSpinning
-              ? style.spinDash
-              : style[action]
-          } ${direction ? style.right : style.left} ${style[spinSpeedClass]}`}
+          className={`${style.sonic} ${actionClass} ${directionClass} ${spinSpeedClass}`}
         />
       </div>
     </div>
