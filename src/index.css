@@ -3,7 +3,6 @@
 }
 
 html {
-  background: url("./assets/bg.png") left bottom;
-  background-size: auto 1200px;
+  background: black;
   min-height: 100vh;
 }
