@@ -88,7 +88,7 @@ export default function Sonic() {
             ? prev + Math.max(2, speed / 2)
             : prev - Math.max(2, speed / 2);
         });
-      } else if (action === "idle") {
+      } else if (action === "idle" && speed) {
         // brake
         if (speed > 24 && !jump) audio.play("skid");
         setSkid(!!speed);
@@ -109,6 +109,7 @@ export default function Sonic() {
         });
       } else {
         setSkid(false);
+        setSpeed(0);
         audio.stop("skid");
       }
     },
