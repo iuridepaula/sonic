@@ -218,14 +218,16 @@ export default function Sonic() {
   const doCrouch = useCallback(() => {
     if (action !== "crouch") setAction("crouch");
   }, [action]);
+  const boredTimer = useRef<NodeJS.Timeout | undefined>(undefined);
   const doNothing = useCallback(() => {
     if (action === "idle") return;
 
     // idle...bored
     setAction("idle");
-    return setTimeout(() => {
+    if (boredTimer.current) clearTimeout(boredTimer.current);
+    boredTimer.current = setTimeout(() => {
       if (action !== "bored") setAction("bored");
-    }, 20 * 1000);
+    }, 9 * 1000);
   }, [action]);
 
   // CONTROLLER
@@ -272,8 +274,7 @@ export default function Sonic() {
       return;
     }
 
-    let boredTimer = doNothing();
-    return () => clearTimeout(boredTimer);
+    doNothing();
   }, [controller, isJumping, speed]);
 
   // KEYBOARD LISTENERS
