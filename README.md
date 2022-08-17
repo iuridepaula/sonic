@@ -1,12 +1,13 @@
+> This is a playground project, just for fun! There are many better ways (and probably right ways) of building this kind of interactivity.
+
+---
+
 # Sonic 🎮
 
-A playable Sonic character, that can be controlled by keyboard or touch, made interily using React Hooks + requestAnimationFrame.
-
+A playable Sonic character, that can be controlled by keyboard or touch, made interily using `React Hooks` + `requestAnimationFrame`.
 
 https://user-images.githubusercontent.com/38506587/185189339-37b3ed46-b039-4c58-9250-413399550292.mp4
 
-
-> This is a playground project, just for fun! There are many better ways (and probably right ways) of building this kind of interactivity.
 
 ## How to play
 
